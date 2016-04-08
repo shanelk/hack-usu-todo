@@ -5,10 +5,10 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/task_text"
-        tools:text="Some todo item." />
+        android:layout_weight="9"
+        tools:text="Some todo item."/>
 
     <TextView
         android:layout_width="0dp"
@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:id="@+id/checkmark_text"
         android:visibility="visible"
-        android:gravity="end"
+        android:gravity="center"
         android:textColor="@android:color/holo_green_light"
         android:text="\u2713"
         tools:ignore="HardcodedText" />
