@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HackUsu Todo</string>
+    <string name="active">Active</string>
+    <string name="complete">Complete</string>
+</resources>
