@@ -15,20 +15,20 @@
         android:id="@+id/filter_layout"
         android:layout_marginBottom="8dp">
 
-        <TextView style="@style/FilterButton"
+        <Button style="@style/FilterButton"
             android:text="@string/all"
             android:id="@+id/all_button"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"/>
 
-        <TextView
+        <Button
             style="@style/FilterButton"
             android:text="@string/active"
             android:id="@+id/active_button"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"/>
 
-        <TextView
+        <Button
             style="@style/FilterButton"
             android:text="@string/complete"
             android:id="@+id/complete_button" />
@@ -41,6 +41,7 @@
         android:layout_below="@id/filter_layout"
         android:textSize="18sp"
         android:id="@+id/todo_input"
+        android:singleLine="true"
         android:imeOptions="actionDone"
         android:hint="@string/add_todo"/>
 
