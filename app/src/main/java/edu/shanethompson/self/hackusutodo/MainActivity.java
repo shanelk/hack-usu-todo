@@ -124,6 +124,8 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
     }
 
     private void addTodoItem(String task) {
+        if(task.isEmpty()) return;
+
         mManager.addTodo(new Todo(task, false));
         mAdapter.notifyDataSetChanged();
         mTodoInput.setText("");
