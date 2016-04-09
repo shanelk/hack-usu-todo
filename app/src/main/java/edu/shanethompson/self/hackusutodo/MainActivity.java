@@ -1,6 +1,7 @@
 package edu.shanethompson.self.hackusutodo;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements TodoManager.TodoManagerInterface, TodoAdapter.TodoClickedListener {
 
     private List<Todo> mTodoList = new ArrayList<>();
-    private TodoManager mManager = new TodoManager(this);
+    private TodoManager mManager;
     private RelativeLayout mMainContentView;
     private EditText mTodoInput;
     TodoAdapter mAdapter;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mManager = new TodoManager(this, PreferenceManager.getDefaultSharedPreferences(this));
         mMainContentView = (RelativeLayout) findViewById(R.id.content_view);
 
         setUpToolbar();
@@ -40,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
 
         setUpListView();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mManager.save();
     }
 
     private void setUpToolbar() {

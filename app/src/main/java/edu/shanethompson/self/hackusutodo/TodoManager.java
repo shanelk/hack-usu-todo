@@ -1,5 +1,11 @@
 package edu.shanethompson.self.hackusutodo;
 
+import android.content.SharedPreferences;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,11 +20,35 @@ public class TodoManager {
     private TodoManagerInterface listener;
     private List<Todo> fullList;
     private TodoFilter filter = TodoFilter.ALL;
+    private SharedPreferences prefs;
+    private static final String PREFS_KEY = "todo_json_key";
 
-    public TodoManager(TodoManagerInterface listener) {
+    public TodoManager(TodoManagerInterface listener, SharedPreferences prefs) {
         this.listener = listener;
-        fullList = new ArrayList<>();
+        this.prefs = prefs;
+        fullList = loadFromPrefs();
         sendListToListener();
+    }
+
+    private List<Todo> loadFromPrefs() {
+        String jsonString = prefs.getString(PREFS_KEY, "");
+        if(jsonString.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Todo>>(){}.getType();
+        return gson.fromJson(jsonString, type);
+    }
+
+    private void saveToPrefs() {
+        String jsonString;
+        Gson gson = new Gson();
+        jsonString = gson.toJson(fullList);
+        prefs.edit().putString(PREFS_KEY, jsonString).apply();
+    }
+
+    public void save() {
+        saveToPrefs();
     }
 
     public void setFilter(TodoFilter filter) {
@@ -83,6 +113,12 @@ public class TodoManager {
 
     public void toggleComplete(int i) {
         fullList.get(i).setComplete(!fullList.get(i).isComplete());
+        sendListToListener();
+    }
+
+    public void clearAll() {
+        prefs.edit().remove(PREFS_KEY).apply();
+        fullList.clear();
         sendListToListener();
     }
 

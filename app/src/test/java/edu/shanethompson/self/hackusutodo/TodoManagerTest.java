@@ -1,7 +1,15 @@
 package edu.shanethompson.self.hackusutodo;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.annotation.Config;
 
 import java.util.List;
 
@@ -14,17 +22,24 @@ import static junit.framework.Assert.assertNotNull;
  *
  */
 
-//@RunWith(CustomRoboelectricRunner.class)
-//@Config(constants = BuildConfig.class, sdk = 21)
+@RunWith(CustomRoboelectricRunner.class)
+@Config(constants = BuildConfig.class, sdk = 21)
 public class TodoManagerTest {
 
+    private Activity activity = Robolectric.setupActivity(MainActivity.class);
     private TodoManager manager;
     private TestManagerInterface todoInterface;
 
     @Before
     public void setUp() throws Exception {
         todoInterface = new TestManagerInterface();
-        manager = new TodoManager(todoInterface);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        manager = new TodoManager(todoInterface, preferences);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        manager.clearAll();
     }
 
     @Test
@@ -100,6 +115,11 @@ public class TodoManagerTest {
         manager.addTodo(new Todo("Incomplete", false));
         manager.clearComplete();
         assertEquals(3, todoInterface.todoList.size());
+    }
+
+    @Test
+    public void testLoadFromPreferences() throws Exception {
+        assertNotNull(todoInterface.todoList);
     }
 
     private class TestManagerInterface implements TodoManager.TodoManagerInterface {
