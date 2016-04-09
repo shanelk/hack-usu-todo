@@ -1,13 +1,18 @@
 package edu.shanethompson.self.hackusutodo;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,14 +22,17 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
 
     private List<Todo> mTodoList = new ArrayList<>();
     private TodoManager mManager = new TodoManager(this);
+    private RelativeLayout mMainContentView;
     private EditText mTodoInput;
     TodoAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mManager.addTodo(new Todo("Hi", false));
         setContentView(R.layout.activity_main);
+        mMainContentView = (RelativeLayout) findViewById(R.id.content_view);
+
+        setUpToolbar();
 
         setUpFilterButtons();
 
@@ -32,6 +40,11 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
 
         setUpListView();
 
+    }
+
+    private void setUpToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.todo_toolbar);
+        setSupportActionBar(toolbar);
     }
 
     private void setUpListView() {
@@ -123,5 +136,29 @@ public class MainActivity extends AppCompatActivity implements TodoManager.TodoM
             addTodoItem(mTodoInput.getText().toString());
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_clear_complete:
+                mManager.clearComplete();
+                return true;
+            case R.id.action_settings:
+                settingsClicked();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void settingsClicked() {
+        Snackbar.make(mMainContentView, R.string.settings_clicked, Snackbar.LENGTH_LONG).show();
     }
 }

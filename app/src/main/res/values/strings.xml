@@ -4,4 +4,7 @@
     <string name="complete">Complete</string>
     <string name="add_todo">Add todo</string>
     <string name="all">All</string>
+    <string name="action_clear_complete">Clear Complete</string>
+    <string name="action_settings">Settings</string>
+    <string name="settings_clicked">Settings Clicked</string>
 </resources>
