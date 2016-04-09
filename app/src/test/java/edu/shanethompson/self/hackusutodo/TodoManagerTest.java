@@ -60,6 +60,14 @@ public class TodoManagerTest {
     }
 
     @Test
+    public void testSetComplete() throws Exception {
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.toggleComplete(1);
+        assertEquals(true, todoInterface.todoList.get(1).isComplete());
+    }
+
+    @Test
     public void testSortedIncompleteFirst() throws Exception {
         manager.addTodo(new Todo("Complete", true));
         manager.addTodo(new Todo("Incomplete", false));

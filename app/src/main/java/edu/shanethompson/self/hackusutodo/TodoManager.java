@@ -28,17 +28,16 @@ public class TodoManager {
 
     public void addTodo(Todo todo) {
         fullList.add(todo);
-        Collections.sort(fullList);
         sendListToListener();
     }
 
     public void removeTodo(Todo todo) {
-        Collections.sort(fullList);
         fullList.remove(todo);
         sendListToListener();
     }
 
     private void sendListToListener() {
+        Collections.sort(fullList);
         switch (filter) {
             case ALL:
                 listener.onListRefresh(fullList);
@@ -79,6 +78,11 @@ public class TodoManager {
                 fullList.remove(todo);
             }
         }
+        sendListToListener();
+    }
+
+    public void toggleComplete(int i) {
+        fullList.get(i).setComplete(!fullList.get(i).isComplete());
         sendListToListener();
     }
 

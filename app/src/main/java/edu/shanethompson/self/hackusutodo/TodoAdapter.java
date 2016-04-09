@@ -1,10 +1,10 @@
 package edu.shanethompson.self.hackusutodo;
 
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,45 +15,50 @@ import java.util.List;
  *
  */
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
+public class TodoAdapter extends ArrayAdapter<Todo> {
+    private int layoutId;
+    private TodoClickedListener listener;
 
-    private List<Todo> todoList;
-
-    public TodoAdapter(List<Todo> todoList) {
-        this.todoList = todoList;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView taskTextView;
-        public TextView checkTextView;
-
-        public ViewHolder(LinearLayout itemView) {
-            super(itemView);
-            taskTextView = (TextView) itemView.findViewById(R.id.task_text);
-            checkTextView = (TextView) itemView.findViewById(R.id.checkmark_text);
-        }
+    public TodoAdapter(Context context, int resource, List<Todo> objects, TodoClickedListener listener) {
+        super(context, resource, objects);
+        layoutId = resource;
+        this.listener = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LinearLayout view = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.list_todo_item, parent, false);
-
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        Todo item = todoList.get(position);
-        holder.taskTextView.setText(item.getTask());
-        if(item.isComplete()) {
-            holder.checkTextView.setVisibility(View.VISIBLE);
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        if(convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(layoutId, null);
+            viewHolder = new ViewHolder();
+            viewHolder.taskText = (TextView) convertView.findViewById(R.id.task_text);
+            viewHolder.checkText = (TextView) convertView.findViewById(R.id.checkmark_text);
+            convertView.setTag(viewHolder);
         } else {
-            holder.checkTextView.setVisibility(View.INVISIBLE);
+            viewHolder = (ViewHolder) convertView.getTag();
         }
+        Todo item = getItem(position);
+        viewHolder.taskText.setText(item.getTask());
+        viewHolder.taskText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.todoClicked(position);
+            }
+        });
+        if(item.isComplete()) {
+            viewHolder.checkText.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.checkText.setVisibility(View.INVISIBLE);
+        }
+        return convertView;
     }
 
-    @Override
-    public int getItemCount() {
-        return todoList.size();
+    public static class ViewHolder {
+        public TextView taskText;
+        public TextView checkText;
+    }
+
+    interface TodoClickedListener {
+        void todoClicked(int position);
     }
 }
