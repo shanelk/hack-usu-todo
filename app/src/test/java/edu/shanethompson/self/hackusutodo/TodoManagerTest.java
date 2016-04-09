@@ -50,6 +50,16 @@ public class TodoManagerTest {
     }
 
     @Test
+    public void testAddAfterFilter() throws Exception {
+        Todo firstTodo = new Todo("first todo", true);
+        manager.addTodo(new Todo("Complete", true));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.setFilter(TodoManager.TodoFilter.ACTIVE);
+        manager.addTodo(new Todo("Complete", true));
+        assertEquals(1, todoInterface.todoList.size());
+    }
+
+    @Test
     public void testSortedIncompleteFirst() throws Exception {
         manager.addTodo(new Todo("Complete", true));
         manager.addTodo(new Todo("Incomplete", false));
@@ -58,11 +68,30 @@ public class TodoManagerTest {
 
     @Test
     public void testShowComplete() throws Exception {
-        manager.addTodo(new Todo("Complete", false));
-        manager.addTodo(new Todo("Incomplete", true));
-        manager.showComplete();
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.addTodo(new Todo("Complete", true));
+        manager.setFilter(TodoManager.TodoFilter.COMPLETE);
         assertEquals(1, todoInterface.todoList.size());
         assertEquals(true, todoInterface.todoList.get(0).isComplete());
+    }
+
+    @Test
+    public void testShowActive() throws Exception {
+        manager.addTodo(new Todo("Complete", true));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.setFilter(TodoManager.TodoFilter.ACTIVE);
+        assertEquals(false, todoInterface.todoList.get(0).isComplete());
+    }
+
+    @Test
+    public void testClearComplete() throws Exception {
+        manager.addTodo(new Todo("Complete", true));
+        manager.addTodo(new Todo("Complete", true));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.addTodo(new Todo("Incomplete", false));
+        manager.clearComplete();
+        assertEquals(3, todoInterface.todoList.size());
     }
 
     private class TestManagerInterface implements TodoManager.TodoManagerInterface {

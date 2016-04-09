@@ -3,4 +3,5 @@
     <string name="active">Active</string>
     <string name="complete">Complete</string>
     <string name="add_todo">Add todo</string>
+    <string name="all">All</string>
 </resources>
